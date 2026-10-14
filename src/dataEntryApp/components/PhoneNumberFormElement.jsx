@@ -6,25 +6,33 @@ import {
   TextField,
   Typography,
   FormControlLabel,
-  Checkbox
+  Checkbox,
 } from "@mui/material";
 import Colors from "../Colors";
 
 const StyledLabel = styled(Typography)(({ theme }) => ({
   width: "50%",
   marginBottom: theme.spacing(1),
-  color: "rgba(0, 0, 0, 0.54)"
+  color: "rgba(0, 0, 0, 0.54)",
+  [theme.breakpoints.down("sm")]: {
+    width: "100%",
+  },
 }));
 
 const StyledError = styled(Typography)({
-  color: Colors.ValidationError
+  color: Colors.ValidationError,
 });
 
-const StyledTextField = styled(TextField)(({ textColor }) => ({
+const StyledTextField = styled(TextField, {
+  shouldForwardProp: (prop) => prop !== "textColor",
+})(({ theme, textColor }) => ({
   width: "30%",
   "& .MuiInputBase-input": {
-    color: textColor
-  }
+    color: textColor,
+  },
+  [theme.breakpoints.down("sm")]: {
+    width: "100%",
+  },
 }));
 
 export default function PhoneNumberFormElement({
@@ -32,7 +40,7 @@ export default function PhoneNumberFormElement({
   formElement,
   update,
   validationResults,
-  uuid
+  uuid,
 }) {
   const { mandatory, name, concept, editable } = formElement;
   const observation = obsHolder.findObservation(concept);
@@ -41,7 +49,7 @@ export default function PhoneNumberFormElement({
     validationResults,
     ({ formIdentifier, questionGroupIndex }) =>
       formIdentifier === uuid &&
-      questionGroupIndex === formElement.questionGroupIndex
+      questionGroupIndex === formElement.questionGroupIndex,
   );
   const label = `${t(name)} ${mandatory ? "*" : ""}`;
   const isError = validationResult && !validationResult.success;
@@ -62,7 +70,7 @@ export default function PhoneNumberFormElement({
         control={
           <Checkbox
             checked={isVerified}
-            onChange={event =>
+            onChange={(event) =>
               update({ phoneNumber: number, isVerified: event.target.checked })
             }
             name="verified"
@@ -97,7 +105,7 @@ export default function PhoneNumberFormElement({
         }
         error={isError}
         textColor={textColor}
-        onChange={e => {
+        onChange={(e) => {
           const phoneNumber = e.target.value;
           isEmpty(phoneNumber)
             ? update({})

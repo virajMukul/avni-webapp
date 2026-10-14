@@ -10,6 +10,15 @@ const StyledForm = styled("div")(({ theme }) => ({
     margin: theme.spacing(1),
     width: "20ch",
   },
+  [theme.breakpoints.down("sm")]: {
+    display: "flex",
+    flexWrap: "wrap",
+    "& > *": {
+      margin: theme.spacing(0.5),
+      flex: "1 1 45%",
+      minWidth: 0,
+    },
+  },
 }));
 
 const DurationFormElement = ({

@@ -43,6 +43,10 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   margin: theme.spacing(4),
   flexGrow: 1,
   elevation: 2,
+  [theme.breakpoints.down("sm")]: {
+    padding: theme.spacing(1.5, 1),
+    margin: theme.spacing(1),
+  },
 }));
 
 const StyledTypography = styled(Typography)({

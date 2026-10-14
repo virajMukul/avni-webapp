@@ -2,7 +2,7 @@ import {
   Radio,
   RadioGroup,
   FormControlLabel,
-  FormControl
+  FormControl,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";
@@ -14,16 +14,16 @@ export default function RadioButtonsGroup({
   label,
   onChange,
   toolTipKey,
-  disabled = false
+  disabled = false,
 }) {
   const { t } = useTranslation();
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     const selectedValue = parseInt(event.target.value);
-    let item = items.find(i => i.id === selectedValue);
+    let item = items.find((i) => i.id === selectedValue);
 
     if (_.isUndefined(item))
-      item = items.find(i => i.id === event.target.value);
+      item = items.find((i) => i.id === event.target.value);
 
     onChange(item);
   };
@@ -37,6 +37,12 @@ export default function RadioButtonsGroup({
         name="addressTypes"
         value={value}
         onChange={handleChange}
+        sx={{
+          flexWrap: "wrap",
+          "& .MuiFormControlLabel-root": {
+            marginRight: { xs: 1, sm: 2 },
+          },
+        }}
       >
         {items.map((item, index) => (
           <FormControlLabel

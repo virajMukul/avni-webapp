@@ -15,11 +15,18 @@ import { visibleObservations } from "dataEntryApp/utils/HiddenObservationUtil";
 
 const StyledForm = styled("div")(({ theme }) => ({
   padding: theme.spacing(4, 3),
+  [theme.breakpoints.down("sm")]: {
+    padding: theme.spacing(2, 1),
+  },
 }));
 
 const StyledTableContainer = styled(Box)(({ theme }) => ({
   maxWidth: "66.66%",
   paddingTop: theme.spacing(1),
+  [theme.breakpoints.down("sm")]: {
+    maxWidth: "100%",
+    overflowX: "auto",
+  },
 }));
 
 const StyledSection = styled(Box)(({ theme }) => ({

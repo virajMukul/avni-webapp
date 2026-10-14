@@ -10,13 +10,13 @@ const TimeFormElement = ({
   value,
   update,
   validationResults,
-  uuid
+  uuid,
 }) => {
   const { t } = useTranslation();
   const validationResult = find(
     validationResults,
     ({ formIdentifier, questionGroupIndex }) =>
-      formIdentifier === uuid && questionGroupIndex === fe.questionGroupIndex
+      formIdentifier === uuid && questionGroupIndex === fe.questionGroupIndex,
   );
 
   return (
@@ -25,8 +25,8 @@ const TimeFormElement = ({
         variant="body1"
         sx={{
           mb: 1.25,
-          width: "50%",
-          color: theme => theme.palette.text.secondary
+          width: { xs: "100%", sm: "50%" },
+          color: (theme) => theme.palette.text.secondary,
         }}
       >
         {t(fe.name)}
@@ -36,20 +36,21 @@ const TimeFormElement = ({
         required={fe.mandatory}
         value={!isNil(value) ? parse(value, "HH:mm", new Date()) : null}
         ampm={false}
-        onChange={value => update(value ? format(value, "HH:mm") : null)}
+        onChange={(value) => update(value ? format(value, "HH:mm") : null)}
         placeholder="HH:mm"
         format="HH:mm"
+        closeOnSelect
         slotProps={{
           textField: {
             error: validationResult && !validationResult.success,
             helperText:
               validationResult &&
               t(validationResult.messageKey, validationResult.extra),
-            style: { width: "30%" },
-            variant: "outlined"
+            sx: { width: { xs: "100%", sm: "30%" } },
+            variant: "outlined",
           },
           actionBar: { actions: ["clear"] },
-          openPickerButton: { "aria-label": "change time", color: "primary" }
+          openPickerButton: { "aria-label": "change time", color: "primary" },
         }}
       />
     </LocalizationProvider>

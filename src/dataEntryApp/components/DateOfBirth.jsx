@@ -50,9 +50,8 @@ export const DateOfBirth = ({ dateOfBirth, onChange, dobErrorMsg }) => {
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <Typography
             variant="body1"
-            sx={{ mb: 1 }}
+            sx={{ mb: 1, width: { xs: "100%", sm: "50%" } }}
             style={{
-              width: "50%",
               marginBottom: 5,
               color: "rgba(0, 0, 0, 0.54)",
             }}
@@ -69,12 +68,13 @@ export const DateOfBirth = ({ dateOfBirth, onChange, dobErrorMsg }) => {
             name="dateOfBirth"
             value={_.isNil(dateOfBirth) ? null : dateOfBirth}
             onChange={(date) => onChange(date)}
+            closeOnSelect
             slotProps={{
               textField: {
                 error: Boolean(!_.isEmpty(dobErrorMsg)),
                 helperText: t(dobErrorMsg),
                 margin: "normal",
-                style: { width: "30%" },
+                sx: { width: { xs: "100%", sm: "30%" } },
                 InputLabelProps: { shrink: true },
                 variant: "outlined",
               },
@@ -89,8 +89,8 @@ export const DateOfBirth = ({ dateOfBirth, onChange, dobErrorMsg }) => {
         <LineBreak num={1} />
         <Typography
           variant="body1"
-          sx={{ mb: 1 }}
-          style={{ width: "50%", color: "rgba(0, 0, 0, 0.54)" }}
+          sx={{ mb: 1, width: { xs: "100%", sm: "50%" } }}
+          style={{ color: "rgba(0, 0, 0, 0.54)" }}
         >
           {t("age")}
         </Typography>
@@ -100,7 +100,7 @@ export const DateOfBirth = ({ dateOfBirth, onChange, dobErrorMsg }) => {
           required
           name="ageYearsPart"
           value={_.isNaN(years) ? "" : years}
-          style={{ width: "30%" }}
+          sx={{ width: { xs: "100%", sm: "30%" } }}
           error={Boolean(_.isNil(dob) && dobErrorMsg)}
           helperText={
             _.isNil(dob) && dobErrorMsg && t("emptyValidationMessage")

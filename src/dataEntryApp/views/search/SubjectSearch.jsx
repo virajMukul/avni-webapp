@@ -8,41 +8,49 @@ import { types } from "../../reducers/searchFilterReducer";
 import { isEmpty } from "lodash";
 import { getOrganisationConfig } from "../../reducers/metadataReducer";
 
-const StyledPaper = styled(Paper)({
+const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: "1.5rem",
   margin: "2rem 1rem",
-  elevation: 2
-});
+  elevation: 2,
+  [theme.breakpoints.down("sm")]: {
+    padding: "0.75rem",
+    margin: "0.5rem",
+  },
+}));
 
 const StyledGrid = styled(Grid)({
   marginBottom: "1%",
   justifyContent: "space-between",
-  alignItems: "baseline"
+  alignItems: "baseline",
 });
 
-const StyledTypography = styled(Typography)({
+const StyledTypography = styled(Typography)(({ theme }) => ({
   fontSize: "22px",
   fontWeight: "500",
   float: "left",
   paddingTop: "1%",
-  paddingLeft: "4px"
-});
+  paddingLeft: "4px",
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "18px",
+    paddingLeft: 0,
+  },
+}));
 
 const StyledButton = styled(Button)({
-  color: "#212529"
+  color: "#212529",
 });
 
 const StyledCancel = styled(Cancel)({
-  fontSize: "12px"
+  fontSize: "12px",
 });
 
 const SubjectSearch = () => {
   const dispatch = useDispatch();
   const searchRequest = useSelector(
-    state => state.dataEntry.searchFilterReducer.request
+    (state) => state.dataEntry.searchFilterReducer.request,
   );
   const organisationConfigs = useSelector(
-    state => state.dataEntry.metadata.organisationConfigs
+    (state) => state.dataEntry.metadata.organisationConfigs,
   );
 
   useEffect(() => {
@@ -55,7 +63,7 @@ const SubjectSearch = () => {
   const resetClick = () => {
     dispatch({
       type: types.ADD_SEARCH_REQUEST,
-      value: { includeVoided: false }
+      value: { includeVoided: false },
     });
   };
 

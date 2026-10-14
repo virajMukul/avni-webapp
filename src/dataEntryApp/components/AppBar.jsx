@@ -45,6 +45,9 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   ...CommonAppBarStyles(theme).toolbar,
   padding: theme.spacing(0, 2),
   minHeight: "4rem !important",
+  [theme.breakpoints.down("sm")]: {
+    padding: theme.spacing(0, 1),
+  },
 }));
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
@@ -79,6 +82,11 @@ const StyledLogoContainer = styled(Box)(({ theme }) => ({
 
 const StyledRegisterButton = styled(Button)(({ theme }) => ({
   marginRight: "0.625rem",
+  [theme.breakpoints.down("sm")]: {
+    marginRight: "0.25rem",
+    minWidth: 0,
+    padding: theme.spacing(0.5, 1),
+  },
   color: "white",
   borderColor: "white",
   borderRadius: "0.5rem",
@@ -94,6 +102,11 @@ const StyledRegisterButton = styled(Button)(({ theme }) => ({
 
 const StyledLinkButton = styled(Button)(({ theme }) => ({
   marginRight: "0.625rem",
+  [theme.breakpoints.down("sm")]: {
+    marginRight: "0.25rem",
+    minWidth: 0,
+    padding: theme.spacing(0.5, 1),
+  },
   color: "white",
   borderColor: "white",
   borderRadius: "0.5rem",
@@ -113,15 +126,21 @@ const StyledUserSection = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   gap: theme.spacing(2),
+  [theme.breakpoints.down("sm")]: {
+    gap: 0,
+  },
 }));
 
-const StyledUserName = styled("p")({
+const StyledUserName = styled("p")(({ theme }) => ({
   fontSize: "0.9375rem",
   marginBottom: "0rem",
   fontWeight: "600",
   color: "white",
   textShadow: "0 0.0625rem 0.125rem rgba(0,0,0,0.1)",
-});
+  [theme.breakpoints.down("sm")]: {
+    display: "none",
+  },
+}));
 
 const StyledSectionDesktop = styled("div")(({ theme }) => ({
   display: "none",
@@ -274,6 +293,21 @@ const PrimarySearchAppBar = () => {
         },
       }}
     >
+      <MenuItem disabled sx={{ display: { xs: "flex", sm: "none" } }}>
+        {userInfo.username}
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          handleMobileMenuClose();
+          handleHomeClick();
+        }}
+        sx={{ display: { xs: "flex", sm: "none" } }}
+      >
+        <IconButton aria-label="Home" size="large">
+          <Home />
+        </IconButton>
+        <p>Home</p>
+      </MenuItem>
       <MenuItem
         onClick={(event) => {
           handleMobileMenuClose();
@@ -365,6 +399,7 @@ const PrimarySearchAppBar = () => {
               onClick={handleHomeClick}
               aria-label="Home"
               size="large"
+              sx={{ display: { xs: "none", sm: "inline-flex" } }}
             >
               <Home />
             </StyledIconButton>

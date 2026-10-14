@@ -16,9 +16,13 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   border: "1px solid #f1ebeb",
   position: "relative",
   minHeight: "600px",
+  [theme.breakpoints.down("sm")]: {
+    padding: theme.spacing(0, 1.5, 12, 1.5),
+    minHeight: "500px",
+  },
 }));
 
-const StyledButtonContainer = styled(Box)({
+const StyledButtonContainer = styled(Box)(({ theme }) => ({
   position: "absolute",
   bottom: 0,
   left: 0,
@@ -27,9 +31,16 @@ const StyledButtonContainer = styled(Box)({
   width: "100%",
   padding: 25,
   display: "flex",
-});
+  [theme.breakpoints.down("sm")]: {
+    height: "auto",
+    minHeight: 70,
+    padding: theme.spacing(1.5),
+    flexWrap: "wrap",
+    gap: theme.spacing(1),
+  },
+}));
 
-const StyledPrevButton = styled(FormWizardButton)({
+const StyledPrevButton = styled(FormWizardButton)(({ theme }) => ({
   color: "orange",
   width: 110,
   height: 30,
@@ -39,9 +50,14 @@ const StyledPrevButton = styled(FormWizardButton)({
   borderRadius: 50,
   padding: "4px 25px",
   backgroundColor: "white",
-});
+  [theme.breakpoints.down("sm")]: {
+    width: "auto",
+    minWidth: 90,
+    padding: "4px 16px",
+  },
+}));
 
-const StyledNextButton = styled(FormWizardButton)({
+const StyledNextButton = styled(FormWizardButton)(({ theme }) => ({
   backgroundColor: "orange",
   color: "white",
   height: 30,
@@ -50,11 +66,21 @@ const StyledNextButton = styled(FormWizardButton)({
   cursor: "pointer",
   borderRadius: 50,
   padding: "4px 25px",
-});
+  [theme.breakpoints.down("sm")]: {
+    width: "auto",
+    minWidth: 90,
+    padding: "4px 16px",
+  },
+}));
 
 const StyledErrorTypography = styled(Typography)(({ theme }) => ({
   marginLeft: 20,
   color: theme.palette.error.main,
+  [theme.breakpoints.down("sm")]: {
+    marginLeft: 0,
+    flexBasis: "100%",
+    fontSize: "0.85rem",
+  },
 }));
 
 const FormWizard = ({

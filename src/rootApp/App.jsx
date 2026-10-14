@@ -64,7 +64,7 @@ const App = () => {
           marginRight: isAvniAutopilotOpen ? "480px" : "0",
         }}
       >
-        <Box sx={{ flex: 1 }}>
+        <Box sx={{ flex: 1, minWidth: 0 }}>
           <Routes />
         </Box>
       </Box>

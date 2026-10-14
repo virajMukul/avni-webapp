@@ -13,6 +13,10 @@ const StyledRoot = styled("div")(({ theme }) => ({
   width: "100%",
   padding: theme.spacing(1),
   marginBottom: theme.spacing(1.25), // 10px
+  [theme.breakpoints.down("sm")]: {
+    height: "auto",
+    minHeight: 40,
+  },
 }));
 
 const StyledTypographyValue = styled(Typography)({

@@ -4,7 +4,7 @@ import {
   Pagination as MuiPagination,
   Select,
   MenuItem,
-  Typography
+  Typography,
 } from "@mui/material";
 
 interface MRTPaginationProps {
@@ -28,7 +28,7 @@ export const MRTPagination: React.FC<MRTPaginationProps> = ({
   isLoading,
   pageSizeOptions = [10, 20, 30],
   customLabel,
-  hasNextPage
+  hasNextPage,
 }) => {
   const hasTotal = typeof total === "number" && total >= 0;
   const pageCount = hasTotal
@@ -62,17 +62,24 @@ export const MRTPagination: React.FC<MRTPaginationProps> = ({
         backgroundColor: "inherit",
         position: "sticky",
         bottom: 0,
-        zIndex: 1
+        zIndex: 1,
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 1.5,
+          flexWrap: "wrap",
+        }}
+      >
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
           Rows per page:
         </Typography>
         <Select
           size="small"
           value={perPage}
-          onChange={e => {
+          onChange={(e) => {
             const next = Number(e.target.value);
             setPage(1); // Reset to first page
             setPerPage(next);
@@ -82,15 +89,15 @@ export const MRTPagination: React.FC<MRTPaginationProps> = ({
           MenuProps={{
             anchorOrigin: {
               vertical: "top",
-              horizontal: "left"
+              horizontal: "left",
             },
             transformOrigin: {
               vertical: "bottom",
-              horizontal: "left"
-            }
+              horizontal: "left",
+            },
           }}
         >
-          {validatedOptions.map(opt => (
+          {validatedOptions.map((opt) => (
             <MenuItem key={opt} value={opt}>
               {opt}
             </MenuItem>
@@ -114,15 +121,15 @@ export const MRTPagination: React.FC<MRTPaginationProps> = ({
         sx={{
           "& .MuiPaginationItem-root": {
             fontWeight: 500,
-            color: "primary.main"
+            color: "primary.main",
           },
           "& .MuiPaginationItem-root.Mui-selected": {
             backgroundColor: "primary.main",
-            color: "white"
+            color: "white",
           },
           "& .MuiPaginationItem-previous": {
             opacity: page === 1 ? 0.5 : 1,
-            pointerEvents: page === 1 ? "none" : "auto"
+            pointerEvents: page === 1 ? "none" : "auto",
           },
           "& .MuiPaginationItem-next": {
             opacity:
@@ -132,8 +139,8 @@ export const MRTPagination: React.FC<MRTPaginationProps> = ({
             pointerEvents:
               hasNextPage === false || (hasTotal && page >= pageCount)
                 ? "none"
-                : "auto"
-          }
+                : "auto",
+          },
         }}
       />
     </Box>

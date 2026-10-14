@@ -31,15 +31,21 @@ const StyledForm = styled("div")(({ theme }) => ({
   },
 }));
 
-const StyledLabel = styled(Typography)({
+const StyledLabel = styled(Typography)(({ theme }) => ({
   width: "50%",
   marginBottom: 10,
   color: "rgba(0, 0, 0, 0.54)",
-});
+  [theme.breakpoints.down("sm")]: {
+    width: "100%",
+  },
+}));
 
-const StyledTextField = styled(TextField)({
+const StyledTextField = styled(TextField)(({ theme }) => ({
   width: "30%",
-});
+  [theme.breakpoints.down("sm")]: {
+    width: "100%",
+  },
+}));
 
 const StyledRadioLabel = styled(FormControlLabel)(({ theme }) => ({
   marginLeft: theme.spacing(2.5),
@@ -73,6 +79,7 @@ export const DateTimeFormElement = ({
         onChange={update}
         placeholder={dateTimeFormat}
         format={dateTimeFormat}
+        closeOnSelect
         slotProps={{
           textField: {
             error: validationResult && !validationResult.success,
@@ -80,6 +87,7 @@ export const DateTimeFormElement = ({
               validationResult &&
               t(validationResult.messageKey, validationResult.extra),
             variant: "outlined",
+            sx: { width: { xs: "100%", sm: "auto" } },
           },
           actionBar: { actions: ["clear"] },
           openPickerButton: { "aria-label": "change date", color: "primary" },
@@ -130,6 +138,7 @@ export const DateFormElement = ({
         placeholder={dateFormat}
         format={dateFormat}
         disabled={!fe.editable}
+        closeOnSelect
         slotProps={{
           textField: {
             error: validationResult && !validationResult.success,
@@ -137,6 +146,7 @@ export const DateFormElement = ({
               validationResult &&
               t(validationResult.messageKey, validationResult.extra),
             variant: "outlined",
+            sx: { width: { xs: "100%", sm: "auto" } },
           },
           input: {
             disableUnderline: !fe.editable,
@@ -258,7 +268,8 @@ export const DateAndDurationFormElement = ({
             actionBar: { actions: ["clear"] },
             openPickerButton: { "aria-label": "change date", color: "primary" },
           }}
-          sx={{ width: "11rem" }}
+          closeOnSelect
+          sx={{ width: { xs: "100%", sm: "11rem" } }}
         />
       </LocalizationProvider>
       <FormLabel sx={{ mt: 1 }}>OR</FormLabel>

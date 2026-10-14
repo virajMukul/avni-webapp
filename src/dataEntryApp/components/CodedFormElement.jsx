@@ -62,7 +62,10 @@ export const CodedFormElement = ({
     <FormControl
       component="fieldset"
       {...props}
-      style={{ width: "80%", marginBottom: "-20px" }}
+      sx={{
+        width: { xs: "100%", sm: "80%" },
+        marginBottom: "-20px",
+      }}
       required={mandatory}
       error={
         (computedValidationResult && !computedValidationResult.success) ||

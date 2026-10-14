@@ -55,6 +55,12 @@ const StyledErrorMessage = styled("p")(({ theme }) => ({
   height: 200,
   textAlign: "center",
   overflow: "scroll",
+  [theme.breakpoints.down("sm")]: {
+    width: "100%",
+    maxWidth: 200,
+    height: "auto",
+    minHeight: 100,
+  },
 }));
 
 const StyledDeleteButton = styled(Button)({

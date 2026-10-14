@@ -6,28 +6,37 @@ import { HelpText } from "../../common/components/HelpText";
 import { shouldForwardProp } from "@mui/system";
 import { SyncValueRadioGroup } from "./SyncValueRadioGroup";
 
-const StyledContainer = styled("div")(({ isGrid }) => ({
+const StyledContainer = styled("div")(({ theme, isGrid }) => ({
   display: isGrid ? "flex" : "block",
   flexDirection: isGrid ? "row" : undefined,
   alignItems: isGrid ? "center" : undefined,
   width: isGrid ? "50%" : undefined,
+  [theme.breakpoints.down("sm")]: {
+    width: "100%",
+  },
 }));
 
 const StyledTypography = styled(Typography, {
   shouldForwardProp: (prop) =>
     shouldForwardProp(prop) && !["hasHelpText", "isGrid"].includes(prop),
-})(({ isGrid, hasHelpText }) => ({
+})(({ theme, isGrid, hasHelpText }) => ({
   width: !isGrid ? "50%" : undefined,
   marginBottom: !isGrid && !hasHelpText ? 8 : 0,
   color: "rgba(0, 0, 0, 0.54)",
   flex: isGrid ? 0.5 : undefined,
   marginRight: isGrid ? "15px" : undefined,
   borderRight: isGrid ? "1px solid rgba(0, 0, 0, 0.12)" : undefined,
+  [theme.breakpoints.down("sm")]: {
+    width: "100%",
+  },
 }));
 
-const StyledTextField = styled(TextField)({
+const StyledTextField = styled(TextField)(({ theme }) => ({
   width: "30%",
-});
+  [theme.breakpoints.down("sm")]: {
+    width: "100%",
+  },
+}));
 
 export default ({
   formElement: fe,

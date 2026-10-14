@@ -5,22 +5,31 @@ import { useTranslation } from "react-i18next";
 import Colors from "../Colors";
 import { SyncValueRadioGroup } from "./SyncValueRadioGroup";
 
-const StyledContainer = styled("div")({
+const StyledContainer = styled("div")(({ theme }) => ({
   width: "50%",
-});
+  [theme.breakpoints.down("sm")]: {
+    width: "100%",
+  },
+}));
 
-const StyledGridContainer = styled("div")({
+const StyledGridContainer = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
   width: "50%",
-});
+  [theme.breakpoints.down("sm")]: {
+    width: "100%",
+  },
+}));
 
-const StyledLabel = styled(Typography)({
+const StyledLabel = styled(Typography)(({ theme }) => ({
   width: "50%",
   marginBottom: 10,
   color: "rgba(0, 0, 0, 0.54)",
-});
+  [theme.breakpoints.down("sm")]: {
+    width: "100%",
+  },
+}));
 
 const StyledGridLabel = styled(Typography)({
   color: "rgba(0, 0, 0, 0.54)",
@@ -29,9 +38,12 @@ const StyledGridLabel = styled(Typography)({
   borderRight: "1px solid rgba(0, 0, 0, 0.12)",
 });
 
-const StyledTextField = styled(TextField)({
+const StyledTextField = styled(TextField)(({ theme }) => ({
   width: "30%",
-});
+  [theme.breakpoints.down("sm")]: {
+    width: "100%",
+  },
+}));
 
 export default ({
   formElement: fe,

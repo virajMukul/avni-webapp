@@ -3,9 +3,12 @@ import { TextField } from "@mui/material";
 import { isEmpty, find } from "lodash";
 import { useTranslation } from "react-i18next";
 
-const StyledTextField = styled(TextField)({
+const StyledTextField = styled(TextField)(({ theme }) => ({
   width: "30%",
-});
+  [theme.breakpoints.down("sm")]: {
+    width: "100%",
+  },
+}));
 
 export default ({
   formElement: fe,

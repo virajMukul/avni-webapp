@@ -144,7 +144,7 @@ const SubjectFormElement = (props) => {
         {isMandatory ? "*" : ""}
       </div>
       <Grid container spacing={2} style={{ width: "100%" }}>
-        <Grid size={10}>
+        <Grid size={{ xs: 12, sm: 10 }}>
           {hasAllowedList ? (
             <Select
               options={allowedOptions || []}
