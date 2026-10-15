@@ -4,9 +4,12 @@ import {
   saveComplete,
   saveCompleteFalse,
   selectAddressLevelType,
+  selectAvailableDraft,
+  selectDraftKey,
   selectIdentifierAssignments,
   selectRegistrationForm,
   selectRegistrationState,
+  setAvailableDraft,
   setFilteredFormElements,
   setInitialSubjectState,
   setRegistrationForm,
@@ -28,7 +31,7 @@ import {
 } from "./selectors";
 import { mapForm } from "../../common/adapters";
 import { setLoad } from "../reducers/loadReducer";
-import { find, isNil, keys, sortBy } from "lodash";
+import { find, get, isNil, keys, sortBy } from "lodash";
 import { mapProfile } from "common/subjectModelMapper";
 import { selectDecisions, selectVisitSchedules } from "dataEntryApp/reducers/serverSideRulesReducer";
 import commonFormUtil from "dataEntryApp/reducers/commonFormUtil";
@@ -36,6 +39,16 @@ import Wizard from "dataEntryApp/state/Wizard";
 import { filterFormElements } from "dataEntryApp/services/FormElementService";
 import identifierAssignmentService from "dataEntryApp/services/IdentifierAssignmentService";
 import { MediaFolder, uploadImage } from "../../common/utils/S3Client";
+import { delay } from "redux-saga";
+import {
+  applyDraft,
+  clearDraft,
+  draftKey,
+  hasAnyAnswer,
+  readDraft,
+  toDraft,
+  writeDraft,
+} from "dataEntryApp/services/RegistrationDraftService";
 
 export function* dataEntryLoadRegistrationFormWatcher() {
   yield takeLatest(subjectTypes.GET_REGISTRATION_FORM, dataEntryLoadRegistrationFormWorker);
@@ -88,6 +101,8 @@ export function* saveSubjectWorker() {
   try {
     const response = yield call(api.saveSubject, resource);
     if (response.success) {
+      const key = yield select(selectDraftKey);
+      if (!isNil(key)) clearDraft(key);
       yield put(saveComplete());
     } else {
       yield put(saveCompleteFalse(response.errorMessage));
@@ -119,6 +134,7 @@ export function* loadNewRegistrationPageWorker({ subjectTypeName }) {
   const identifierAssignments = yield call(api.fetchIdentifierAssignments, formMapping.formUUID);
   identifierAssignmentService.addIdentifiersToObservations(registrationForm, subject.observations, identifierAssignments);
   yield setRegistrationOnLoadState(registrationForm, subject, identifierAssignments);
+  yield call(detectDraftWorker, null);
 }
 
 function* loadEditRegistrationPageWatcher() {
@@ -144,6 +160,7 @@ export function* loadEditRegistrationPageWorker({ subjectUuid }) {
     yield put.resolve(getGenders());
   }
   yield setRegistrationOnLoadState(registrationForm, subject, []);
+  yield call(detectDraftWorker, subjectUuid);
 }
 
 export function* setRegistrationOnLoadState(registrationForm, subject, identifierAssignments) {
@@ -169,6 +186,86 @@ export function* setRegistrationOnLoadState(registrationForm, subject, identifie
       identifierAssignments,
     ),
   );
+}
+
+const DRAFT_WRITE_DEBOUNCE_IN_MS = 1200;
+
+function* detectDraftWorker(subjectUuid) {
+  const username = yield select((state) => get(state, "app.userInfo.username"));
+  const subject = yield select(selectRegistrationSubject);
+  const key = draftKey({
+    username,
+    subjectTypeName: get(subject, "subjectType.name"),
+    subjectUuid,
+  });
+  yield put(setAvailableDraft(key, readDraft(key)));
+}
+
+// takeLatest cancels the previous task, so the delay debounces a burst of
+// keystrokes into a single write. redux-saga 0.16 has no debounce effect.
+function* draftWriteWorker() {
+  yield call(delay, DRAFT_WRITE_DEBOUNCE_IN_MS);
+  const key = yield select(selectDraftKey);
+  if (isNil(key)) return;
+  // While a draft is still on offer, typing must not overwrite the answers the
+  // banner is offering to restore - the user has not chosen yet.
+  const availableDraft = yield select(selectAvailableDraft);
+  if (!isNil(availableDraft)) return;
+  const state = yield select(selectRegistrationState);
+  if (isNil(state.subject) || !state.loaded) return;
+  const draft = toDraft(state.subject);
+  if (hasAnyAnswer(draft)) writeDraft(key, draft);
+}
+
+function* draftWriteWatcher() {
+  yield takeLatest(
+    [
+      subjectTypes.UPDATE_OBS,
+      subjectTypes.SET_FIRST_NAME,
+      subjectTypes.SET_MIDDLE_NAME,
+      subjectTypes.SET_LAST_NAME,
+      subjectTypes.SET_DATE_OF_BIRTH,
+      subjectTypes.SET_GENDER,
+      subjectTypes.SET_ADDRESS,
+      subjectTypes.SET_REGISTRATION_DATE,
+      subjectTypes.ADD_NEW_QG,
+      subjectTypes.REMOVE_QG,
+      subjectTypes.ON_NEXT,
+      subjectTypes.ON_PREVIOUS,
+    ],
+    draftWriteWorker,
+  );
+}
+
+function* restoreDraftWatcher() {
+  yield takeLatest(subjectTypes.RESTORE_DRAFT, restoreDraftWorker);
+}
+
+export function* restoreDraftWorker() {
+  const state = yield select(selectRegistrationState);
+  const draft = yield select(selectAvailableDraft);
+  if (isNil(draft) || isNil(state.subject)) return;
+
+  // Only the subject is replaced: the wizard stays on its current page and the
+  // next/previous workers recompute visible elements from the restored answers.
+  const subject = applyDraft(state.subject.cloneForEdit(), draft, state.registrationForm);
+  yield put(
+    setRegistrationState({
+      ...state,
+      subject,
+      availableDraft: null,
+    }),
+  );
+}
+
+function* discardDraftWatcher() {
+  yield takeLatest(subjectTypes.DISCARD_DRAFT, discardDraftWorker);
+}
+
+export function* discardDraftWorker() {
+  const key = yield select(selectDraftKey);
+  if (!isNil(key)) clearDraft(key);
+  yield put(setAvailableDraft(key, null));
 }
 
 function* updateObsWatcher() {
@@ -329,6 +426,9 @@ export default function* subjectSaga() {
       registrationNextWatcher,
       registrationPreviousWatcher,
       saveSubjectWatcher,
+      draftWriteWatcher,
+      restoreDraftWatcher,
+      discardDraftWatcher,
     ].map(fork),
   );
 }

@@ -35,7 +35,28 @@ export const types = {
   SET_ADDRESS: `${prefix}SET_ADDRESS`,
   ADD_NEW_QG: `${prefix}ADD_NEW_QG`,
   REMOVE_QG: `${prefix}REMOVE_QG`,
+  SET_AVAILABLE_DRAFT: `${prefix}SET_AVAILABLE_DRAFT`,
+  RESTORE_DRAFT: `${prefix}RESTORE_DRAFT`,
+  DISCARD_DRAFT: `${prefix}DISCARD_DRAFT`,
 };
+
+export const setAvailableDraft = (key, availableDraft) => ({
+  type: types.SET_AVAILABLE_DRAFT,
+  key,
+  availableDraft,
+});
+
+export const restoreDraft = () => ({
+  type: types.RESTORE_DRAFT,
+});
+
+export const discardDraft = () => ({
+  type: types.DISCARD_DRAFT,
+});
+
+export const selectAvailableDraft = (state) => state.dataEntry.registration.availableDraft;
+
+export const selectDraftKey = (state) => state.dataEntry.registration.draftKey;
 
 export const selectAddressLevelType = (addressLevelType) => ({
   type: types.SELECT_ADDRESS_LEVEL_TYPE,
@@ -241,6 +262,8 @@ const initialState = {
   profilePictureFile: null,
   removeProfilePicture: false,
   saveErrorMessageKey: null,
+  draftKey: null,
+  availableDraft: null,
 };
 
 // reducer
@@ -318,6 +341,13 @@ export default (state = initialState, action) => {
     }
     case types.SET_STATE: {
       return action.state;
+    }
+    case types.SET_AVAILABLE_DRAFT: {
+      return {
+        ...state,
+        draftKey: action.key,
+        availableDraft: action.availableDraft,
+      };
     }
     case types.SET_FILTERED_FORM_ELEMENTS: {
       return {

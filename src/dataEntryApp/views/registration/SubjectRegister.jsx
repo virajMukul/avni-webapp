@@ -2,13 +2,16 @@ import { useEffect, Fragment } from "react";
 import { styled } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useSearchParams } from "react-router-dom";
-import { Paper, Typography } from "@mui/material";
+import { Alert, Button, Paper, Typography } from "@mui/material";
 import { AddressLevel, Individual } from "avni-models";
 import {
   fetchRegistrationRulesResponse,
   onLoad,
   onLoadEdit,
+  discardDraft,
+  restoreDraft,
   selectAddressLevelType,
+  selectAvailableDraft,
   selectRegistrationState,
   setAddress,
   setDateOfBirth,
@@ -68,6 +71,7 @@ const SubjectRegister = () => {
 
   const orgConfig = useSelector(selectOrganisationConfig);
   const registrationState = useSelector(selectRegistrationState);
+  const availableDraft = useSelector(selectAvailableDraft);
   const user = useSelector((state) => state.app.authSession);
   const genders = useSelector((state) => state.dataEntry.metadata.genders);
   const addressLevelTypes = useSelector(
@@ -227,6 +231,35 @@ const SubjectRegister = () => {
         <StyledTypography variant="h5">
           {isEdit ? t("editSubject") : t("newSubject")}
         </StyledTypography>
+        {availableDraft && (
+          <Alert
+            severity="info"
+            sx={{ mb: 2 }}
+            action={
+              <>
+                <Button
+                  size="small"
+                  color="inherit"
+                  onClick={() => dispatch(restoreDraft())}
+                >
+                  {t("restoreRegistrationDraft", "Restore")}
+                </Button>
+                <Button
+                  size="small"
+                  color="inherit"
+                  onClick={() => dispatch(discardDraft())}
+                >
+                  {t("discardRegistrationDraft", "Discard")}
+                </Button>
+              </>
+            }
+          >
+            {t(
+              "unsavedRegistrationDraftFound",
+              "Unsaved answers from an earlier attempt are available.",
+            )}
+          </Alert>
+        )}
         <RegistrationForm fetchRulesResponse={fetchRegistrationRulesResponse}>
           <DateFormElement
             uuid={Individual.validationKeys.REGISTRATION_DATE}
