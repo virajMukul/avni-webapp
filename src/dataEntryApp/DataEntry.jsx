@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { styled } from "@mui/material/styles";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import SubjectSearch from "./views/search/SubjectSearch";
 import SubjectRegister from "./views/registration/SubjectRegister";
@@ -32,6 +32,8 @@ import AttendanceDidntHappenView from "./views/attendance/AttendanceDidntHappenV
 import { Grid } from "@mui/material";
 import i18n from "i18next";
 import { I18nextProvider } from "react-i18next";
+import MyDashboard from "./views/dashboard/MyDashboard";
+import CardResultList from "./views/dashboard/CardResultList";
 import { NewsList } from "./views/subjectDashBoard/components/news/NewsList";
 import NewsDetails from "./views/subjectDashBoard/components/news/NewsDetails";
 import Player from "./views/audio/Player";
@@ -78,12 +80,20 @@ const DataEntry = () => {
             </Grid>
             <Grid size={12}>
               <Routes>
-                <Route path="/" element={<SearchFilterFormContainer />} />
+                <Route
+                  path="/"
+                  element={<Navigate to="/app/dashboard" replace />}
+                />
                 <Route
                   path="/searchFilter"
                   element={<SearchFilterFormContainer />}
                 />
                 <Route path="/search" element={<SubjectSearch />} />
+                <Route path="/dashboard" element={<MyDashboard />} />
+                <Route
+                  path="/dashboard/card/:cardUuid"
+                  element={<CardResultList />}
+                />
                 <Route path="/register" element={<SubjectRegister />} />
                 <Route path="/editSubject" element={<SubjectRegister />} />
                 <Route path="/subject" element={<SubjectDashboard />} />

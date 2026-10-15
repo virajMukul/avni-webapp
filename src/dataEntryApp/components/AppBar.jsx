@@ -156,6 +156,14 @@ const StyledSectionMobile = styled("div")(({ theme }) => ({
   },
 }));
 
+const StyledNavLinks = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  [theme.breakpoints.down("sm")]: {
+    display: "none",
+  },
+}));
+
 const StyledPopper = styled(Popper)({
   zIndex: 100,
 });
@@ -275,6 +283,18 @@ const PrimarySearchAppBar = () => {
     </Menu>
   );
 
+  const mobileNavLinks = [
+    { link: "/app/searchFilter", label: "search", defaultLabel: "Search" },
+    {
+      link: "/app/dashboard",
+      label: "myDashboard",
+      defaultLabel: "Dashboard",
+    },
+    ...(isNewsAvailable
+      ? [{ link: "/app/news", label: "news", defaultLabel: "News" }]
+      : []),
+  ];
+
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
     <Menu
@@ -308,6 +328,17 @@ const PrimarySearchAppBar = () => {
         </IconButton>
         <p>Home</p>
       </MenuItem>
+      {mobileNavLinks.map(({ link, label, defaultLabel }) => (
+        <MenuItem
+          key={link}
+          component={Link}
+          to={link}
+          onClick={handleMobileMenuClose}
+          sx={{ display: { xs: "flex", sm: "none" }, pl: 3 }}
+        >
+          {t(label, defaultLabel)}
+        </MenuItem>
+      ))}
       <MenuItem
         onClick={(event) => {
           handleMobileMenuClose();
@@ -334,9 +365,9 @@ const PrimarySearchAppBar = () => {
     </Menu>
   );
 
-  const LinkButton = ({ link, label }) => (
+  const LinkButton = ({ link, label, defaultLabel }) => (
     <StyledLinkButton variant="outlined" component={Link} to={link}>
-      {t(label)}
+      {t(label, defaultLabel)}
     </StyledLinkButton>
   );
 
@@ -388,8 +419,19 @@ const PrimarySearchAppBar = () => {
             </div>
           </ClickAwayListener>
 
-          <LinkButton label={"search"} link={"/app/searchFilter"} />
-          {isNewsAvailable && <LinkButton label={"news"} link={"/app/news"} />}
+          {/* Below sm these live in the overflow menu instead - five buttons
+              plus the logo and user section do not fit a phone width. */}
+          <StyledNavLinks>
+            <LinkButton label={"search"} link={"/app/searchFilter"} />
+            <LinkButton
+              label={"myDashboard"}
+              defaultLabel={"Dashboard"}
+              link={"/app/dashboard"}
+            />
+            {isNewsAvailable && (
+              <LinkButton label={"news"} link={"/app/news"} />
+            )}
+          </StyledNavLinks>
 
           <StyledUserSection>
             <Typography component="div" sx={{ color: "inherit" }}>
